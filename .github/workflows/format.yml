@@ -1,0 +1,85 @@
+name: 🎨 Formatting Check
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  format-core:
+    name: 🧩 Komu-Core Formatting
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Komu-Core
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Install clang-format
+        run: sudo apt-get install -y clang-format
+
+      - name: 🔍 Check Komu-Core formatting
+        run: |
+          echo "Checking formatting for Komu-Core..."
+          files=$(find . -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \))
+          if [ -z "$files" ]; then
+            echo "No C++ files found in Komu-Core."
+            exit 0
+          fi
+          clang-format --version
+          clang-format --dry-run --Werror $files
+
+  format-cmd:
+    name: 💻 Komu-Cmd Formatting
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Komu-Cmd
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Install clang-format
+        run: sudo apt-get install -y clang-format
+
+      - name: 🔍 Check Komu-Cmd formatting
+        run: |
+          echo "Checking formatting for Komu-Cmd..."
+          files=$(find . -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \))
+          if [ -z "$files" ]; then
+            echo "No C++ files found in Komu-Cmd."
+            exit 0
+          fi
+          clang-format --version
+          clang-format --dry-run --Werror $files
+
+  format-test:
+    name: 🧪 Komu-Test Formatting
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Komu-Test
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Install clang-format
+        run: sudo apt-get install -y clang-format
+
+      - name: 🔍 Check Komu-Test formatting
+        run: |
+          echo "Checking formatting for Komu-Test..."
+          files=$(find . -type f \( -name "*.cpp" -o -name "*.h" -o -name "*.hpp" \))
+          if [ -z "$files" ]; then
+            echo "No C++ files found in Komu-Test."
+            exit 0
+          fi
+          clang-format --version
+          clang-format --dry-run --Werror $files

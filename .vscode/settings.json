@@ -1,0 +1,6 @@
+{
+    "clang-format.ignore": [
+        "External/**",
+        "Binaries/**"
+    ]
+}

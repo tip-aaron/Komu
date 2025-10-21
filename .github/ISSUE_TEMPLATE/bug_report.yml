@@ -1,0 +1,45 @@
+name: "🐞 Bug Report"
+description: Report a bug or unexpected behavior in the interpreter
+labels: [bug]
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: What went wrong? Be clear and concise.
+      placeholder: The interpreter crashes when parsing 'let x = 10;'
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      description: Provide steps so we can reproduce the issue.
+      placeholder: |
+        1. Run `my_lang file.lang`
+        2. Observe output
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+
+  - type: dropdown
+    attributes:
+      label: OS
+      description: Which OS are you using?
+      options:
+        - Windows
+        - Linux
+        - macOS
+
+  - type: input
+    attributes:
+      label: Version / Commit Hash
+      description: Which version or commit are you running?
+
+  - type: textarea
+    attributes:
+      label: Logs / Output
+      description: Attach logs, crash dumps, or screenshots if possible.

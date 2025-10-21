@@ -1,0 +1,110 @@
+# ===== OS-specific files =====
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ===== Build artifacts =====
+*.obj
+*.o
+*.lo
+*.slo
+*.Plo
+*.a
+*.la
+*.lib
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.out
+*.app
+*.i
+*.ii
+*.gch
+*.pch
+
+# CMake (just in case it's used too)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Premake-generated build files
+*.make
+Makefile
+*.workspace
+*.project
+*.sln
+*.vcxproj*
+*.xcodeproj
+*.xcworkspace
+*.ncb
+*.sdf
+*.opensdf
+*.user
+*.suo
+*.pidb
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.pbxuser
+*.xcuserstate
+
+# GNU Make
+obj/
+bin/
+build/
+*.dep
+
+# Visual Studio specific
+.vs/
+*.VC.db
+*.VC.opendb
+
+# Xcode specific
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+DerivedData/
+build/
+*.xcworkspace
+
+# ===== Logs, temp, and misc =====
+*.log
+*.tmp
+*.swp
+*.bak
+*.old
+
+# ===== Backup files =====
+*~
+*.orig
+*.rej
+*.backup
+
+# ===== IDEs =====
+# CLion
+.idea/
+cmake-build-*/
+*.iml
+
+# Code::Blocks
+*.depend
+*.layout
+
+# ===== Premake cache/config =====
+premake5.lua~
+
+Binaries
+
+# Exclude
+!Vendor/Binaries
+!External/*

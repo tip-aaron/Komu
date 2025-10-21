@@ -1,0 +1,93 @@
+name: 🧪 Test
+
+on:
+  workflow_run:
+    workflows: ["🏗️ Build"]
+    types: [completed]
+
+jobs:
+  test-linux:
+    name: Test (Linux)
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: Binaries-Linux-${{ matrix.config }}
+          path: Binaries/
+
+      - name: 🧪 Run tests
+        run: |
+          chmod +x Binaries/linux-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test
+          ./Binaries/linux-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test --gtest_output=xml:report.xml
+
+      - name: 📄 Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-Linux-${{ matrix.config }}
+          path: report.xml
+
+  test-windows:
+    name: Test (Windows)
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: Binaries-Windows-${{ matrix.config }}
+          path: Binaries/
+
+      - name: 🧪 Run tests
+        run: .\Binaries\windows-x86_64\${{ matrix.config }}\Komu-Test\Komu-Test.exe --gtest_output=xml:report.xml
+        shell: cmd
+
+      - name: 📄 Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-Windows-${{ matrix.config }}
+          path: report.xml
+
+  test-macos:
+    name: Test (macOS)
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: Binaries-macOS-${{ matrix.config }}
+          path: Binaries/
+
+      - name: 🧪 Run tests
+        run: |
+          chmod +x Binaries/macOS-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test
+          ./Binaries/macOS-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test --gtest_output=xml:report.xml
+
+      - name: 📄 Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-macOS-${{ matrix.config }}
+          path: report.xml

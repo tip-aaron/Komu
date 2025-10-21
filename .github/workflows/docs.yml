@@ -1,0 +1,65 @@
+name: 📚 Doxygen Docs
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: write # allow committing to docs branch
+  pages: read
+  id-token: write
+
+jobs:
+  docs:
+    name: Generate and Publish Doxygen Docs
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # needed so we can push branches
+
+      - name: ⚙️ Setup Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz
+
+      - name: 🧾 Generate Documentation
+        run: |
+          if [ ! -f Doxyfile ]; then
+            echo "⚠️ No Doxyfile found, generating default one..."
+            doxygen -g
+          fi
+          doxygen Doxyfile
+
+      - name: 📦 Upload Docs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Doxygen-Docs
+          path: Docs/
+
+      - name: 🚀 Deploy to docs branch
+        run: |
+          echo "Preparing to deploy documentation..."
+          DOCS_DIR="Docs"
+
+          if [ ! -d "$DOCS_DIR" ]; then
+            echo "❌ No documentation directory found at $DOCS_DIR"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin docs || true
+          git switch docs || git switch --orphan docs
+
+          # Clean branch except .git
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' 'Docs' -exec rm -rf {} +
+
+          git add .
+          git commit -m "📚 Update Doxygen documentation [skip ci]" || echo "No changes to commit."
+          git push origin docs

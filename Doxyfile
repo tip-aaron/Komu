@@ -1,0 +1,81 @@
+# ---------------------------------------------------------------------------
+# Project Information
+# ---------------------------------------------------------------------------
+
+PROJECT_NAME           = "Komu"
+PROJECT_BRIEF          = "An interpreter project written in C++"
+OUTPUT_DIRECTORY       = "Docs"
+OUTPUT_LANGUAGE        = English
+EXTRACT_ALL            = YES
+OPTIMIZE_OUTPUT_FOR_C  = NO
+OPTIMIZE_OUTPUT_JAVA   = NO
+
+# ---------------------------------------------------------------------------
+# Output Configuration
+# ---------------------------------------------------------------------------
+
+
+HTML_OUTPUT            = .
+CREATE_SUBDIRS         = NO
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+GENERATE_TREEVIEW      = YES
+FULL_PATH_NAMES        = NO
+STRIP_FROM_PATH        = Source
+INLINE_SOURCES         = YES
+
+# ---------------------------------------------------------------------------
+# Graphs / Diagrams
+# ---------------------------------------------------------------------------
+
+HAVE_DOT               = YES
+DOT_IMAGE_FORMAT       = svg
+INTERACTIVE_SVG        = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+
+# ---------------------------------------------------------------------------
+# Input Configuration
+# ---------------------------------------------------------------------------
+
+# Include all module source folders and documentation directories
+INPUT                  = \
+    Komu-Core/Source \
+    Komu-Cmd/Source \
+    Komu-Test/Source \
+    Docs/diagrams \
+    Docs/examples \
+    README.md
+
+FILE_PATTERNS          = *.cpp *.h *.hpp *.dox *.c *.md
+
+# Ignore these folders
+EXCLUDE_PATTERNS       = \
+    */Tests/* \
+    */Binaries/* \
+    */External/*
+
+RECURSIVE              = YES
+
+# ---------------------------------------------------------------------------
+# Extraction Settings
+# ---------------------------------------------------------------------------
+
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+
+# ---------------------------------------------------------------------------
+# Source Code Browsing
+# ---------------------------------------------------------------------------
+
+SOURCE_BROWSER         = YES
+REFERENCES_RELATION    = YES
+REFERENCED_BY_RELATION = YES
+
+# ---------------------------------------------------------------------------
+# Markdown / Main Page
+# ---------------------------------------------------------------------------
+
+MARKDOWN_SUPPORT       = YES
+USE_MDFILE_AS_MAINPAGE = README.md
+
