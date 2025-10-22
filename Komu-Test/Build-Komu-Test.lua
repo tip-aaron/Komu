@@ -78,6 +78,7 @@ project("gtest_main")
 kind("StaticLib")
 language("c++")
 cppdialect("c++20")
+staticruntime("on")
 
 targetdir("../Binaries/" .. OutputDir .. "/%{prj.name}")
 objdir("../Binaries/Intermediates/" .. OutputDir .. "/%{prj.name}")
@@ -92,3 +93,21 @@ includedirs({
 })
 
 links({ "gtest" })
+
+filter("configurations:debug")
+defines({ "DEBUG" })
+runtime("Debug")
+symbols("On")
+
+filter("configurations:release")
+defines({ "RELEASE" })
+optimize("On")
+symbols("On")
+
+filter("configurations:dist")
+defines({ "DIST" })
+runtime("Release")
+optimize("On")
+symbols("Off")
+
+defines({ "GTEST_OS_LINUX", "GTEST_HAS_RTTI" })
