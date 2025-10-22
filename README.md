@@ -1,5 +1,16 @@
-# Komu
+<p align="center">
+  <a href="" target="blank"><img src="./repository/images/Logo.svg" height="200" width="200" alt="Premake" /></a>
+</p>
 
+<p align="center">
+    <img alt="GitHub commit activity" src="https://img.shields.io/github/commit-activity/w/tip-aaron/Komu" />
+    <img src="https://github.com/tip-aaron/Komu/actions/workflows/ci-workflow.yml/badge.svg?branch=main" alt="main" />
+</p>
+
+# Welome to Komu
+
+This is a project of 2nd year students of Technological Institute of the Philippines - Quezon City (T.I.P. - Q.C.)
+for the course, Principles of Programming Languages, in Computer Science. A compiler written in C++.
 
 ## License
 

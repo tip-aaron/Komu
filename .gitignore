@@ -103,8 +103,9 @@ cmake-build-*/
 # ===== Premake cache/config =====
 premake5.lua~
 
-Binaries
+Binaries/
 
-# Exclude
+# Exclude.
+!Vendor/Binaries/**/*.exe
 !Vendor/Binaries
 !External/*

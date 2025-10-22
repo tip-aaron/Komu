@@ -1,5 +1,6 @@
 #include "Komu-Core/Komu-Core.hpp"
-#include <gtest/gtest.h>
+
+#include "gtest/gtest.h"
 
 TEST(MathTest, Basic) { EXPECT_EQ(2 + 2, 4); }
 

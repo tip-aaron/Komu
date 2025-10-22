@@ -1,0 +1,207 @@
+name: CI Workflow
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  check-format:
+    name: Check Formatting
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Komu-Core
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check format
+        uses: RafikFarhad/clang-format-github-action@v3
+        with:
+          sources: "Komu-Core/**/*.hpp,Komu-Core/**/*.cpp,Komu-Core/**/*.h,Komu-Core/**/*.c,Komu-Test/**/*.hpp,Komu-Test/**/*.cpp,Komu-Test/**/*.h,Komu-Test/**/*.c,Komu-Cmd/**/*.hpp,Komu-Cmd/**/*.cpp,Komu-Cmd/**/*.h,Komu-Cmd/**/*.c"
+
+  build-linux:
+    name: Build (Linux)
+    needs: [check-format]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup environment and Build
+        run: |
+          chmod +x ./Scripts/Setup-Linux.sh
+          ./Scripts/Setup-Linux.sh
+
+      - name: 🔨 Build
+        run: make config=${{ matrix.config }} -j$(nproc)
+
+      - name: 📦 Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: Binaries-Linux-${{ matrix.config }}
+          path: Binaries/
+
+  build-windows:
+    name: Build (Windows)
+    needs: [check-format]
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🧱 Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: ⚙️ Setup environment and Build
+        run: Scripts\Setup-Windows.bat
+        shell: cmd
+
+      - name: 🔨 Build
+        run: msbuild Komu.sln /p:Configuration=${{ matrix.config }} /p:Platform=x64 /m /nologo
+        shell: cmd
+
+      - name: 📦 Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: Binaries-Windows-${{ matrix.config }}
+          path: Binaries/
+
+  build-macos:
+    name: Build (macosx)
+    needs: [check-format]
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup environment and Build
+        run: |
+          chmod +x ./Scripts/Setup-MacOS.sh
+          ./Scripts/Setup-MacOS.sh
+
+      - name: 🔨 Build all Xcode projects
+        run: |
+          for scheme in Komu-Core Komu-Cmd Komu-Test; do
+            echo "Building $scheme..."
+            xcodebuild \
+              -workspace Komu.xcworkspace \
+              -scheme "$scheme" \
+              -configuration ${{ matrix.config }} \
+              build
+          done
+
+      - name: 📦 Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: Binaries-macosx-${{ matrix.config }}
+          path: Binaries/
+
+  test-linux:
+    name: Test (Linux)
+    needs: [build-linux]
+    if: success()
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: Binaries-Linux-${{ matrix.config }}
+          path: Binaries/
+      - run: ls Binaries -R
+
+      - name: 🧪 Run tests
+        run: |
+          chmod +x Binaries/linux-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test
+          ./Binaries/linux-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test --gtest_output=xml:report.xml
+
+      - name: 📄 Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-Linux-${{ matrix.config }}
+          path: report.xml
+
+  test-windows:
+    name: Test (Windows)
+    needs: [build-windows]
+    if: success()
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: Binaries-Windows-${{ matrix.config }}
+          path: Binaries/
+
+      - name: 🧪 Run tests
+        run: Binaries\windows-x86_64\${{ matrix.config }}\Komu-Test\Komu-Test.exe --gtest_output=xml:report.xml
+        shell: cmd
+
+      - name: 📄 Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-Windows-${{ matrix.config }}
+          path: report.xml
+
+  test-macos:
+    name: Test (macosx)
+    needs: [build-macos]
+    if: success()
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        config: [debug, release]
+
+    steps:
+      - name: 🧰 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Download built binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: Binaries-macosx-${{ matrix.config }}
+          path: Binaries/
+
+      - name: 🧪 Run tests
+        run: |
+          chmod +x Binaries/macosx-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test
+          ./Binaries/macosx-x86_64/${{ matrix.config }}/Komu-Test/Komu-Test --gtest_output=xml:report.xml
+
+      - name: 📄 Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-macosx-${{ matrix.config }}
+          path: report.xml

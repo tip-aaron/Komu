@@ -39,17 +39,17 @@ buildoptions({
 	"-Wno-missing-field-initializers",
 })
 
-filter("configurations:Debug")
+filter("configurations:debug")
 defines({ "DEBUG" })
 runtime("Debug")
 symbols("On")
 
-filter("configurations:Release")
+filter("configurations:release")
 defines({ "RELEASE" })
 optimize("On")
 symbols("On")
 
-filter("configurations:Dist")
+filter("configurations:dist")
 defines({ "DIST" })
 runtime("Release")
 optimize("On")

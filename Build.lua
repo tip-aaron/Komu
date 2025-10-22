@@ -1,7 +1,7 @@
 -- premake5.lua
 workspace("Komu")
 architecture("x64")
-configurations({ "Debug", "Release", "Dist" })
+configurations({ "debug", "release", "dist" })
 startproject("Komu-Cmd")
 
 filter("system:windows")
