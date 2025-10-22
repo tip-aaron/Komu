@@ -25,7 +25,9 @@
 var NAVTREE =
 [
   [ "Komu", "index.html", [
-    [ "License", "index.html#autotoc_md1", null ],
+    [ "Welome to Komu", "index.html#autotoc_md0", [
+      [ "License", "index.html#autotoc_md1", null ]
+    ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
