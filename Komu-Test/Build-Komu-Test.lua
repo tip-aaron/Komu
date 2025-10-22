@@ -72,6 +72,22 @@ includedirs({
 	"../External/googletest/googletest",
 })
 
+filter("configurations:debug")
+defines({ "DEBUG" })
+runtime("Debug")
+symbols("On")
+
+filter("configurations:release")
+defines({ "RELEASE" })
+optimize("On")
+symbols("On")
+
+filter("configurations:dist")
+defines({ "DIST" })
+runtime("Release")
+optimize("On")
+symbols("Off")
+
 project("gtest_main")
 kind("StaticLib")
 language("c++")
